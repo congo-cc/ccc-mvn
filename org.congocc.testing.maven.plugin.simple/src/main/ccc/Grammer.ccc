@@ -1,0 +1,20 @@
+BASE_NAME="Simple";
+PARSER_PACKAGE="org.congocc.testing.maven.plugin.simple";
+NODE_PACKAGE="org.congocc.testing.maven.plugin.simple.ast";
+
+SKIP : <WHITESPACE : (" "| "\t"| "\n"| "\r")+>;
+
+// Literals
+TOKEN #Literal :
+    <TRUE: 'true'> #BooleanLiteral
+    |
+    <FALSE: "false"> #BooleanLiteral
+;
+
+Value :
+    <TRUE>
+    |
+    <FALSE>
+;
+
+Root : Value! <EOF>! ;
