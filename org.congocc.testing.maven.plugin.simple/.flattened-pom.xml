@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.congocc</groupId>
+  <artifactId>org.congocc.testing.maven.plugin.simple</artifactId>
+  <version>0.0.0-RC1</version>
+  <url>http://github.com/simpligility/ossrh-demo/org.congocc.testing.maven.plugin.simple</url>
+  <organization>
+    <name>CongoCC Community</name>
+    <url>https://congocc.org</url>
+  </organization>
+  <licenses>
+    <license>
+      <name>The MIT License, Version 2.0</name>
+      <url>http://opensource.org/licenses/MIT</url>
+    </license>
+  </licenses>
+  <developers>
+    <developer>
+      <id>revusky</id>
+      <name>Jonathan Revusky</name>
+      <email>revusky@gmail.com</email>
+      <organizationUrl>https://github.com/revusky</organizationUrl>
+    </developer>
+    <developer>
+      <id>stbischof</id>
+      <name>Stefan Bischof</name>
+      <email>stbischof@bipolis.org</email>
+      <organizationUrl>https://github.com/stbischof</organizationUrl>
+    </developer>
+  </developers>
+  <scm>
+    <connection>scm:git:git://github.com/congo-cc/congo-parser-generator.git/org.congocc.testing.maven.plugin.simple</connection>
+    <developerConnection>scm:git:ssh://github.com:congo-cc/congo-parser-generator.git/org.congocc.testing.maven.plugin.simple</developerConnection>
+    <url>http://github.com/congo-cc/congo-parser-generator/tree/main/org.congocc.testing.maven.plugin.simple</url>
+  </scm>
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.sonatype.plugins</groupId>
+        <artifactId>nexus-staging-maven-plugin</artifactId>
+        <version>1.6.7</version>
+        <extensions>true</extensions>
+      </plugin>
+    </plugins>
+  </build>
+</project>

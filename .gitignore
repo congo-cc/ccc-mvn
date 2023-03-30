@@ -1,0 +1,12 @@
+target
+*/src/generated
+mondrian.*properties
+*.ipr
+*.iws
+*.iml
+.project
+.settings
+.classpath
+.idea
+*.json
+/.vs/slnx.sqlite
