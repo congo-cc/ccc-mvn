@@ -1,6 +1,7 @@
 package org.congocc.maven.plugin;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.maven.plugin.AbstractMojo;
@@ -37,7 +38,7 @@ public class GeneratorMojo extends AbstractMojo {
 	@Parameter(property = "quiet", defaultValue = "false")
 	boolean quiet;
 
-	Map<String, String> symbols;
+	private Map<String, String> symbols = new HashMap<>();
 
 	public void execute() throws MojoExecutionException, MojoFailureException {
 		try {
@@ -51,7 +52,6 @@ public class GeneratorMojo extends AbstractMojo {
 		} catch (Exception e) {
 			getLog().error(e);
 
-			e.printStackTrace();
 		}
 	}
 }
