@@ -20,8 +20,8 @@
                         Main-Class: org.congocc.app.Main
                         Export-Package: org.congocc.*
                         
-                        # Optional a local relative path to congocc-full.jar
-                        -includeresource @https://parsers.org/download/congocc-full.jar
+                        # Optional a local relative path to congocc.jar
+                        -includeresource @https://parsers.org/download/congocc.jar
                      ]]>
                     </bnd>
                 </configuration>
