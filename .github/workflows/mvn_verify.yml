@@ -27,4 +27,4 @@ jobs:
       with:
         name: Test-reports
         path: |
-          **/test-reports/*/TEST-*.xml
+          **/surefire-reports/TEST-*.xml
