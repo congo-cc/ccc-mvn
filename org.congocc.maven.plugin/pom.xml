@@ -10,9 +10,13 @@
     
     <name>CongoCC Maven Plugin</name>
     <description>CongoCC Maven Plugin, uses CongoCC Parser-Generator so generate Parsers using maven Plugin.</description>
+
+    <prerequisites>
+        <maven>3.6.3</maven>
+    </prerequisites>
     
     <properties>
-        <maven.target.version>3.3.9</maven.target.version>
+        <maven.target.version>3.9.6</maven.target.version>
     </properties>
     <dependencies>
         <dependency>
@@ -39,14 +43,9 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>org.apache.maven.shared</groupId>
-            <artifactId>maven-mapping</artifactId>
-            <version>3.0.0</version>
-        </dependency>
-        <dependency>
             <groupId>org.apache.maven.plugin-tools</groupId>
             <artifactId>maven-plugin-annotations</artifactId>
-            <version>3.7.1</version>
+            <version>3.11.0</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
