@@ -23,7 +23,6 @@
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>build-helper-maven-plugin</artifactId>
-				<version>3.0.0</version>
 				<executions>
 					<execution>
 						<id>add-source</id>
@@ -41,11 +40,9 @@
 			</plugin>
 			<plugin>
 				<artifactId>maven-surefire-plugin</artifactId>
-				<version>3.0.0-M7</version>
 			</plugin>
 			<plugin>
 				<artifactId>maven-failsafe-plugin</artifactId>
-				<version>3.0.0-M7</version>
 			</plugin>
 		</plugins>
 	</build>
@@ -54,7 +51,7 @@
 			<dependency>
 				<groupId>org.junit</groupId>
 				<artifactId>junit-bom</artifactId>
-				<version>5.9.2</version>
+				<version>5.10.2</version>
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
