@@ -14,12 +14,14 @@ import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.PathMatcher;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Mojo(name = "ccc-generate", defaultPhase = LifecyclePhase.GENERATE_SOURCES)
 public class GeneratorMojo extends AbstractMojo {
-
+    public static final PathMatcher GRAMMAR_FILE_MATCHER = FileSystems.getDefault().getPathMatcher("glob:**/*.ccc");
     /**
      * The current Maven project.
      */
@@ -46,13 +48,23 @@ public class GeneratorMojo extends AbstractMojo {
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
         try {
-            List<Path> grammars = findGrammarFiles();
-            getLog().info(+ grammars.size() + " grammar(s) found > " + grammars.stream().map(p -> p.toFile().getName()).collect(Collectors.joining(", ")));
-            for(Path path : grammars) {
-                int returnValue = org.congocc.app.Main.mainProgram(path, outputDirectory, lang, jdk,
-                        quiet, symbols);
-                this.project.addCompileSourceRoot(outputDirectory.normalize().toString());
-                getLog().info("return: " + returnValue);
+            if(!Files.isDirectory(sourceDirectory)) {
+                return;
+            }
+
+            boolean compile = hasChangesToCompile();
+            if(compile) {
+                List<Path> grammars = findGrammarFiles();
+                getLog().info(grammars.size() + " grammar(s) found > " + grammars.stream().map(p -> p.toFile().getName()).collect(Collectors.joining(", ")));
+
+                for(Path path : grammars) {
+                    int returnValue = org.congocc.app.Main.mainProgram(path, outputDirectory, lang, jdk,
+                            quiet, symbols);
+                    this.project.addCompileSourceRoot(outputDirectory.normalize().toString());
+                    getLog().info("return: " + returnValue);
+                }
+            } else {
+                getLog().info("Thera are not changes to compile ");
             }
         } catch(Exception e) {
             getLog().error(e);
@@ -61,10 +73,12 @@ public class GeneratorMojo extends AbstractMojo {
     }
 
     private List<Path> findGrammarFiles() throws IOException {
-        PathMatcher matcher = FileSystems.getDefault().getPathMatcher("glob:**/*.ccc");
-        if(Files.isDirectory(sourceDirectory)) {
-            return Files.walk(sourceDirectory).filter(matcher::matches).collect(Collectors.toList());
-        }
-        return Collections.emptyList();
+        return Files.walk(sourceDirectory).filter(GRAMMAR_FILE_MATCHER::matches).collect(Collectors.toList());
+    }
+
+    private boolean hasChangesToCompile() throws IOException {
+        long sourceTimestamp = Files.walk(sourceDirectory).filter(GRAMMAR_FILE_MATCHER::matches).map(path -> path.toFile().lastModified()).max(Long::compareTo).orElse(-1L);
+        long generatedTimestamp = Files.isDirectory(outputDirectory) ? Files.walk(outputDirectory).map(path -> path.toFile().lastModified()).max(Long::compareTo).orElse(-1L) : -1;
+        return sourceTimestamp > generatedTimestamp;
     }
 }
