@@ -17,7 +17,7 @@ import java.nio.file.PathMatcher;
 import java.util.*;
 import java.util.stream.Collectors;
 
-@Mojo(name = "generate", defaultPhase = LifecyclePhase.GENERATE_SOURCES)
+@Mojo(name = "ccc-generate", defaultPhase = LifecyclePhase.GENERATE_SOURCES)
 public class GeneratorMojo extends AbstractMojo {
     public static final PathMatcher GRAMMAR_FILE_MATCHER = FileSystems.getDefault().getPathMatcher("glob:**/*.ccc");
     /**
