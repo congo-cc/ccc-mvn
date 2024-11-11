@@ -54,4 +54,16 @@
             <version>0.0.7</version>
         </dependency>
     </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-plugin-plugin</artifactId>
+                <configuration>
+                    <goalPrefix>congocc</goalPrefix>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>
