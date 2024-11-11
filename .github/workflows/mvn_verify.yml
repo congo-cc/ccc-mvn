@@ -24,7 +24,7 @@ jobs:
       with:
         maven-version: 3.9.9
     - name: Build with Maven
-      run: mvn -B -X verify --file pom.xml
+      run: mvn -B verify --file pom.xml
     - name: Upload Test Reports
       if:  always()
       uses: actions/upload-artifact@a8a3f3ad30e3422c9c7b888a15615d19a852ae32 # v3.1.3
