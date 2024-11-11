@@ -20,6 +20,9 @@ jobs:
         distribution: 'temurin'
         cache: maven
     - name: Build with Maven
+      uses: s4u/setup-maven-action@v1.16.0
+      with:
+        maven-version: 3.9.9
       run: mvn -B -X verify --file pom.xml
     - name: Upload Test Reports
       if:  always()
