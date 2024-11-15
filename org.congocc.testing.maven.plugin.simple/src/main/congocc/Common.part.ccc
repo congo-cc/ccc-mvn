@@ -1,0 +1,6 @@
+INJECT Literal :
+{
+    void dummyInjectedMethod() {
+        // do nothing
+    }
+}

@@ -2,6 +2,9 @@ BASE_NAME="Simple2";
 PARSER_PACKAGE="org.congocc.testing.maven.plugin.simple2";
 NODE_PACKAGE="org.congocc.testing.maven.plugin.simple2.ast";
 
+INCLUDE "Grammar.lexer.ccc"
+INCLUDE "Common.part.ccc"
+
 SKIP : <WHITESPACE : (" "| "\t"| "\n"| "\r")+>;
 
 // Literals
