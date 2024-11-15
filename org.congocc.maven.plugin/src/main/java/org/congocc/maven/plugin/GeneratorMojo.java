@@ -20,6 +20,12 @@ import java.util.stream.Collectors;
 @Mojo(name = "ccc-generate", defaultPhase = LifecyclePhase.GENERATE_SOURCES)
 public class GeneratorMojo extends AbstractMojo {
     private static final PathMatcher GRAMMAR_FILE_MATCHER = FileSystems.getDefault().getPathMatcher("glob:**/*.ccc");
+
+    /**
+     * <p>It matches fragments with filename pattern {@code *.*.ccc} ({@code {grammar}.{part}.ccc}), for example {@code grammar.lexer.ccc}, {@code grammar.part.ccc}, {@code grammar.injects.ccc}.</p>
+     */
+    private static final PathMatcher GRAMMAR_FRAGMENTS_FILE_MATCHER = FileSystems.getDefault().getPathMatcher("glob:**/*.{*.ccc}");
+
     /**
      * The current Maven project.
      */
@@ -71,7 +77,7 @@ public class GeneratorMojo extends AbstractMojo {
     }
 
     private List<Path> findGrammarFiles() throws IOException {
-        return Files.walk(sourceDirectory).filter(GRAMMAR_FILE_MATCHER::matches).collect(Collectors.toList());
+        return Files.walk(sourceDirectory).filter(GRAMMAR_FILE_MATCHER::matches).filter(path -> !GRAMMAR_FRAGMENTS_FILE_MATCHER.matches(path)).collect(Collectors.toList());
     }
 
     private boolean hasChangesToCompile() throws IOException {
