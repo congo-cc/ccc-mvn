@@ -64,12 +64,12 @@ public class GeneratorMojo extends AbstractMojo {
                 for(Path path : grammars) {
                     int returnValue = org.congocc.app.Main.mainProgram(path, outputDirectory, lang, jdk,
                             quiet, symbols);
-                    this.project.addCompileSourceRoot(outputDirectory.normalize().toString());
                     getLog().info("return: " + returnValue);
                 }
             } else {
                 getLog().info("Thera are not changes to compile ");
             }
+            this.project.addCompileSourceRoot(outputDirectory.normalize().toString());
         } catch(Exception e) {
             getLog().error(e);
             throw new MojoExecutionException("CongoCC failure", e);
