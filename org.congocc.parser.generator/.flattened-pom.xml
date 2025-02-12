@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.congocc</groupId>
+  <artifactId>org.congocc.parser.generator</artifactId>
+  <version>2.0.0-RC9</version>
+  <name>CongoCC Parser-Generator</name>
+  <description>CongoCC Parser-Generator is a All-In-One, no dependency Parser generator.</description>
+  <url>http://github.com/simpligility/ossrh-demo/org.congocc.parser.generator</url>
+  <organization>
+    <name>CongoCC Community</name>
+    <url>https://congocc.org</url>
+  </organization>
+  <licenses>
+    <license>
+      <name>The MIT License, Version 2.0</name>
+      <url>http://opensource.org/licenses/MIT</url>
+    </license>
+  </licenses>
+  <developers>
+    <developer>
+      <id>revusky</id>
+      <name>Jonathan Revusky</name>
+      <email>revusky@gmail.com</email>
+      <organizationUrl>https://github.com/revusky</organizationUrl>
+    </developer>
+    <developer>
+      <id>stbischof</id>
+      <name>Stefan Bischof</name>
+      <email>stbischof@bipolis.org</email>
+      <organizationUrl>https://github.com/stbischof</organizationUrl>
+    </developer>
+  </developers>
+  <scm>
+    <connection>scm:git:git://github.com/congo-cc/congo-parser-generator.git/org.congocc.parser.generator</connection>
+    <developerConnection>scm:git:ssh://github.com:congo-cc/congo-parser-generator.git/org.congocc.parser.generator</developerConnection>
+    <url>http://github.com/congo-cc/congo-parser-generator/tree/main/org.congocc.parser.generator</url>
+  </scm>
+</project>

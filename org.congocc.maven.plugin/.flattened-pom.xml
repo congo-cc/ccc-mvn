@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.congocc</groupId>
+  <artifactId>org.congocc.maven.plugin</artifactId>
+  <version>2.0.0-RC9</version>
+  <packaging>maven-plugin</packaging>
+  <name>CongoCC Maven Plugin</name>
+  <description>CongoCC Maven Plugin, uses CongoCC Parser-Generator so generate Parsers using maven Plugin.</description>
+  <url>http://github.com/simpligility/ossrh-demo/org.congocc.maven.plugin</url>
+  <organization>
+    <name>CongoCC Community</name>
+    <url>https://congocc.org</url>
+  </organization>
+  <licenses>
+    <license>
+      <name>The MIT License, Version 2.0</name>
+      <url>http://opensource.org/licenses/MIT</url>
+    </license>
+  </licenses>
+  <developers>
+    <developer>
+      <id>revusky</id>
+      <name>Jonathan Revusky</name>
+      <email>revusky@gmail.com</email>
+      <organizationUrl>https://github.com/revusky</organizationUrl>
+    </developer>
+    <developer>
+      <id>stbischof</id>
+      <name>Stefan Bischof</name>
+      <email>stbischof@bipolis.org</email>
+      <organizationUrl>https://github.com/stbischof</organizationUrl>
+    </developer>
+  </developers>
+  <prerequisites>
+    <maven>3.6.3</maven>
+  </prerequisites>
+  <scm>
+    <connection>scm:git:git://github.com/congo-cc/congo-parser-generator.git/org.congocc.maven.plugin</connection>
+    <developerConnection>scm:git:ssh://github.com:congo-cc/congo-parser-generator.git/org.congocc.maven.plugin</developerConnection>
+    <url>http://github.com/congo-cc/congo-parser-generator/tree/main/org.congocc.maven.plugin</url>
+  </scm>
+  <dependencies>
+    <dependency>
+      <groupId>org.congocc</groupId>
+      <artifactId>org.congocc.parser.generator</artifactId>
+      <version>2.0.0-RC9</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.maven</groupId>
+      <artifactId>maven-core</artifactId>
+      <version>3.9.9</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.maven</groupId>
+      <artifactId>maven-plugin-api</artifactId>
+      <version>3.9.9</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.maven</groupId>
+      <artifactId>maven-artifact</artifactId>
+      <version>3.9.9</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.maven.plugin-tools</groupId>
+      <artifactId>maven-plugin-annotations</artifactId>
+      <version>3.15.1</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.sonatype.plexus</groupId>
+      <artifactId>plexus-build-api</artifactId>
+      <version>0.0.7</version>
+      <scope>compile</scope>
+    </dependency>
+  </dependencies>
+</project>
