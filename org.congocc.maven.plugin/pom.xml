@@ -16,7 +16,7 @@
     </prerequisites>
     
     <properties>
-        <maven.target.version>3.9.11</maven.target.version>
+        <maven.target.version>3.9.12</maven.target.version>
     </properties>
     <dependencies>
         <dependency>
