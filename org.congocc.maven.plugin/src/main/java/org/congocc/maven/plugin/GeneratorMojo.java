@@ -20,12 +20,6 @@ import java.util.stream.Collectors;
 @Mojo(name = "ccc-generate", defaultPhase = LifecyclePhase.GENERATE_SOURCES)
 public class GeneratorMojo extends AbstractMojo {
 
-    /**
-     * The current Maven project.
-     */
-    @Component
-    private MavenProject project;
-
     @Parameter(property = "sourceDirectory", defaultValue = "${project.basedir}/src/main/congocc")
     Path sourceDirectory;
 
@@ -72,7 +66,7 @@ public class GeneratorMojo extends AbstractMojo {
     @Parameter
     List<String> excludes;
 
-    private Map<String, String> symbols = new HashMap<>();
+    private final Map<String, String> symbols = new HashMap<>();
 
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
@@ -105,11 +99,11 @@ public class GeneratorMojo extends AbstractMojo {
     }
 
     private List<String> effectiveIncludes() {
-        return (includes != null && !includes.isEmpty()) ? includes : Collections.singletonList("**/*.ccc");
+        return includes != null && !includes.isEmpty() ? includes : Collections.singletonList("**/*.ccc");
     }
 
     private List<String> effectiveExcludes() {
-        return (excludes != null && !excludes.isEmpty()) ? excludes : Collections.singletonList("**/*.*.ccc");
+        return excludes != null && !excludes.isEmpty() ? excludes : Collections.singletonList("**/*.*.ccc");
     }
 
     private List<PathMatcher> toMatchers(List<String> patterns) {
