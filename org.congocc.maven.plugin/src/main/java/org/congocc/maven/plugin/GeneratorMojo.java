@@ -53,7 +53,7 @@ public class GeneratorMojo extends AbstractMojo {
      * </includes>
      * }</pre>
      */
-    @Parameter
+    @Parameter(defaultValue = "**/*.ccc")
     List<String> includes;
 
     /**
@@ -69,7 +69,7 @@ public class GeneratorMojo extends AbstractMojo {
      * </excludes>
      * }</pre>
      */
-    @Parameter
+    @Parameter(defaultValue = "**/*.*.ccc")
     List<String> excludes;
 
     private final Map<String, String> symbols = new HashMap<>();
@@ -81,8 +81,8 @@ public class GeneratorMojo extends AbstractMojo {
                 return;
             }
 
-            List<PathMatcher> includeMatchers = toMatchers(effectiveIncludes());
-            List<PathMatcher> excludeMatchers = toMatchers(effectiveExcludes());
+            List<PathMatcher> includeMatchers = toMatchers(includes);
+            List<PathMatcher> excludeMatchers = toMatchers(excludes);
 
             boolean compile = hasChangesToCompile(includeMatchers);
             if (compile) {
@@ -102,14 +102,6 @@ public class GeneratorMojo extends AbstractMojo {
             getLog().error(e);
             throw new MojoExecutionException("CongoCC failure", e);
         }
-    }
-
-    private List<String> effectiveIncludes() {
-        return includes != null && !includes.isEmpty() ? includes : Collections.singletonList("**/*.ccc");
-    }
-
-    private List<String> effectiveExcludes() {
-        return excludes != null && !excludes.isEmpty() ? excludes : Collections.singletonList("**/*.*.ccc");
     }
 
     private List<PathMatcher> toMatchers(List<String> patterns) {
