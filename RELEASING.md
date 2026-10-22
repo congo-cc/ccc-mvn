@@ -37,6 +37,17 @@ affects local builds; the release workflow overrides it with the tag version. Af
 a release, bump it to the next `-SNAPSHOT` so local builds never collide with a
 published version.
 
+## Snapshots
+
+`.github/workflows/snapshot.yml` publishes the `revision` from `pom.xml` to
+<https://central.sonatype.com/repository/maven-snapshots/> on every push to `main`
+(and on *Run workflow*), as long as that version ends in `-SNAPSHOT`. It uses the
+same secrets as the release workflow. Snapshots are not validated by Sonatype, are
+overwritten on each push and deleted after 90 days.
+
+One-time setup: on central.sonatype.com open *View Namespaces*, use the dropdown
+on `org.congocc` and select **Enable SNAPSHOTs**.
+
 ## One-time setup (project credentials)
 
 Everything below lives at the **congo-cc organization level** where possible, so

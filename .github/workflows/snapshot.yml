@@ -1,0 +1,76 @@
+name: Publish SNAPSHOT to Maven Central
+
+# Publishes the current development version (the `revision` property in
+# pom.xml, which must end in -SNAPSHOT) to the Central Portal snapshot
+# repository on every push to main. Snapshots are overwritten on each push and
+# deleted by Sonatype after 90 days. Uses the same secrets as deploy.yml.
+#
+# One-time setup: on central.sonatype.com → View Namespaces → org.congocc →
+# "Enable SNAPSHOTs".
+
+on:
+  push:
+    branches: [ "main" ]
+    paths-ignore:
+      - '**.md'
+      - '.github/release.yml'
+      - '.github/dependabot.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: snapshot-publish
+  cancel-in-progress: true
+
+jobs:
+  publish-snapshot:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Check that the pom version is a SNAPSHOT
+        id: version
+        run: |
+          VERSION=$(sed -n 's|.*<revision>\(.*\)</revision>.*|\1|p' pom.xml | head -1)
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          case "$VERSION" in
+            *-SNAPSHOT) echo "Publishing snapshot $VERSION" ;;
+            *) echo "::notice::revision '$VERSION' is not a -SNAPSHOT version, nothing to publish"; echo "skip=true" >> "$GITHUB_OUTPUT" ;;
+          esac
+
+      # Must run before setup-java, which writes the settings.xml with the credentials.
+      - name: Set up Maven
+        if: steps.version.outputs.skip != 'true'
+        uses: s4u/setup-maven-action@5d4481650d2563723ad6c5e8f009ac8fd746e3e8 # v1.22.0
+        with:
+          maven-version: 3.9.16
+
+      - name: Set up JDK 17 and Maven Central credentials
+        if: steps.version.outputs.skip != 'true'
+        uses: actions/setup-java@b843ebf9b913146b38da2eaa7aeddf76074ae1ad # v6.1.0
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: maven
+          overwrite-settings: true
+          server-id: central
+          server-username: MAVEN_USERNAME
+          server-password: MAVEN_PASSWORD
+          gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
+          gpg-passphrase: MAVEN_GPG_PASSPHRASE
+
+      - name: Build and test
+        if: steps.version.outputs.skip != 'true'
+        run: mvn -B -ntp verify
+
+      - name: Publish snapshot
+        if: steps.version.outputs.skip != 'true'
+        run: mvn -B -ntp -Prelease deploy -DskipTests
+        env:
+          MAVEN_USERNAME: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
+          MAVEN_PASSWORD: ${{ secrets.MAVEN_CENTRAL_TOKEN }}
+          MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
