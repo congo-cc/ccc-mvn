@@ -62,24 +62,25 @@ gpg --armor --export-secret-keys <KEYID> > congocc-signing-key.asc
 Store the exported private key somewhere the maintainers share (password manager
 of the org), then delete the `.asc` file.
 
-### 2. Maven Central account that is not a person
+### 2. Maven Central user token
 
-The namespace `org.congocc` on <https://central.sonatype.com> is currently
-verified for a personal account. To make it project-owned:
+The namespace `org.congocc` on <https://central.sonatype.com> already has several
+publisher users (currently `stbischof` and two accounts of Jonathan Revusky; see
+*View Namespaces → org.congocc → users*). Any of them can generate the user token
+that CI uses: log in, **View Account → Generate User Token**. The token consists of
+a *username* and a *password*, both random strings, not the login credentials.
 
-1. The namespace owner contacts
-   [Central Support](https://central.sonatype.org/pages/support/) and asks for
-   *Organization Management* access for the `org.congocc` namespace.
-2. In **Publish → Organizations**, invite the other maintainers (they need their own
-   central.sonatype.com login first) and grant them the `org.congocc` namespace. Make
-   at least two people **Admin** so the project does not depend on one account.
-3. Generate the user token that CI will use: log in, **View Account → Generate User
-   Token**. Any member with publish rights on the namespace can generate it. Prefer a
-   dedicated login (e.g. a `congocc-releases` account created with a shared mailbox)
-   that is a member of the organization, so a maintainer leaving does not revoke CI.
+Because more than one person can publish, a maintainer leaving does not block
+releases: another publisher generates a new token and replaces the two secrets.
 
-The user token consists of a *username* and a *password*; both are random strings,
-not the login credentials.
+Keep at least two active publisher users on the namespace. To add one, the new
+person creates a central.sonatype.com login and an existing publisher asks
+[Central Support](https://central.sonatype.org/pages/support/) to add them, or
+uses *Organization Management* (Publish → Organizations) if that is enabled for the
+namespace.
+
+Note: Maven Central enforces monthly publishing limits per account (shown on the
+Portal); a token from a dedicated account would share that account's quota.
 
 ### 3. GitHub secrets
 
