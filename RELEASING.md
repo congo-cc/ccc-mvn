@@ -23,13 +23,16 @@ project.
    <https://repo1.maven.org/maven2/org/congocc/> after a few minutes) and the jars
    are attached to the GitHub release.
 
-If the workflow fails before the "Sign and publish" step, nothing was uploaded: fix
-the problem, delete the release and the tag, and start again. If it fails during or
-after the upload, check the *Deployments* page on central.sonatype.com before
-retrying: Maven Central never overwrites a published version.
+If the workflow fails before anything was uploaded (any step before "Sign and
+publish", or that step failing before "Uploading"), fix the problem on `main` and
+re-run it for the same tag: **Actions → Release to Maven Central → Run workflow**,
+enter the tag (e.g. `v2.2.0`). The workflow file is taken from `main`, the code from
+the tag, so the release does not need to be recreated. If it fails during or after
+the upload, check the *Deployments* page on central.sonatype.com before retrying:
+Maven Central never overwrites a published version.
 
 The `revision` property in `pom.xml` is the *next* development version with a
-`-SNAPSHOT` suffix (e.g. `2.2.0-SNAPSHOT` while 2.2.0 is unreleased). It only
+`-SNAPSHOT` suffix (e.g. `2.3.0-SNAPSHOT` after 2.2.0 was released). It only
 affects local builds; the release workflow overrides it with the tag version. After
 a release, bump it to the next `-SNAPSHOT` so local builds never collide with a
 published version.

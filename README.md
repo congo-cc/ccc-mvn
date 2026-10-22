@@ -6,7 +6,7 @@ This Maven plugin allows to run [CongoCC](https://parsers.org/) to generate sour
 <plugin>
   <groupId>org.congocc</groupId>
   <artifactId>org.congocc.maven.plugin</artifactId>
-  <version>2.1.0</version>
+  <version>2.2.0</version>
   <executions>
     <execution>
       <goals>

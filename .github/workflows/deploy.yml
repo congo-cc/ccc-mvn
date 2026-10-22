@@ -18,12 +18,18 @@ name: Release to Maven Central
 on:
   release:
     types: [published]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Tag of an existing GitHub release to (re)publish, e.g. v2.2.0
+        required: true
+        type: string
 
 permissions:
   contents: read
 
 concurrency:
-  group: release-${{ github.event.release.tag_name }}
+  group: release-${{ github.event.release.tag_name || inputs.tag }}
   cancel-in-progress: false
 
 jobs:
@@ -37,13 +43,13 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          ref: ${{ github.event.release.tag_name }}
+          ref: ${{ github.event.release.tag_name || inputs.tag }}
           persist-credentials: false
 
       - name: Derive version from release tag
         id: version
         env:
-          TAG: ${{ github.event.release.tag_name }}
+          TAG: ${{ github.event.release.tag_name || inputs.tag }}
         run: |
           VERSION="${TAG#v}"
           if ! [[ "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+([-.][0-9A-Za-z.-]+)?$ ]]; then
@@ -56,22 +62,29 @@ jobs:
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
           echo "Releasing version $VERSION"
 
+      # Runs before setup-java on purpose: this action writes its own
+      # settings.xml, which must not overwrite the one setup-java creates
+      # with the Central credentials.
+      - name: Set up Maven
+        uses: s4u/setup-maven-action@5d4481650d2563723ad6c5e8f009ac8fd746e3e8 # v1.22.0
+        with:
+          maven-version: 3.9.16
+
       - name: Set up JDK 17 and Maven Central credentials
         uses: actions/setup-java@b843ebf9b913146b38da2eaa7aeddf76074ae1ad # v6.1.0
         with:
           java-version: '17'
           distribution: 'temurin'
           cache: maven
+          overwrite-settings: true
           server-id: central # must match <publishingServerId> in pom.xml
           server-username: MAVEN_USERNAME
           server-password: MAVEN_PASSWORD
           gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
           gpg-passphrase: MAVEN_GPG_PASSPHRASE
 
-      - name: Set up Maven
-        uses: s4u/setup-maven-action@5d4481650d2563723ad6c5e8f009ac8fd746e3e8 # v1.22.0
-        with:
-          maven-version: 3.9.16
+      - name: Check that settings.xml holds the Central credentials
+        run: grep -q '<id>central</id>' ~/.m2/settings.xml || { echo "::error::no 'central' server in ~/.m2/settings.xml"; exit 1; }
 
       - name: Build and test
         run: mvn -B -ntp verify -Drevision="${{ steps.version.outputs.version }}"
@@ -86,7 +99,7 @@ jobs:
       - name: Attach jars to the GitHub release
         env:
           GH_TOKEN: ${{ github.token }}
-          TAG: ${{ github.event.release.tag_name }}
+          TAG: ${{ github.event.release.tag_name || inputs.tag }}
           VERSION: ${{ steps.version.outputs.version }}
         run: |
           gh release upload "$TAG" --clobber \
