@@ -92,12 +92,17 @@ public class GeneratorMojo extends AbstractMojo {
                 for (Path path : grammars) {
                     int returnValue = org.congocc.app.Main.mainProgram(path, outputDirectory, lang, jdk,
                             quiet, symbols);
-                    getLog().info("return: " + returnValue);
+                    if(returnValue != 0) {
+                        throw new MojoFailureException("CongoCC failed with exit code " + returnValue + " for grammar " + path);
+                    }
+                    getLog().info("generated " + path.getFileName() + " into " + outputDirectory);
                 }
             } else {
-                getLog().info("Thera are not changes to compile ");
+                getLog().info("Grammar files are up to date, nothing to generate");
             }
             this.project.addCompileSourceRoot(outputDirectory.normalize().toString());
+        } catch (MojoFailureException e) {
+            throw e;
         } catch (Exception e) {
             getLog().error(e);
             throw new MojoExecutionException("CongoCC failure", e);
