@@ -6,18 +6,7 @@
 	<artifactId>org.congocc.parent</artifactId>
 	<version>${revision}</version>
 	<packaging>pom</packaging>
-	<url>http://github.com/simpligility/ossrh-demo</url>
-	<distributionManagement>
-		<snapshotRepository>
-			<id>ossrh</id>
-			<url>https://s01.oss.sonatype.org/content/repositories/snapshots/</url>
-		</snapshotRepository>
-		<repository>
-			<id>ossrh</id>
-			<url>
-				https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-		</repository>
-	</distributionManagement>
+	<url>https://github.com/congo-cc/ccc-mvn</url>
 	<licenses>
 		<license>
 			<name>The MIT License, Version 2.0</name>
@@ -43,20 +32,23 @@
 		</developer>
 	</developers>
 	<scm>
-		<connection>scm:git:git://github.com/congo-cc/congo-parser-generator.git</connection>
-		<developerConnection>
-			scm:git:ssh://github.com:congo-cc/congo-parser-generator.git</developerConnection>
-		<url>http://github.com/congo-cc/congo-parser-generator/tree/main</url>
+		<connection>scm:git:https://github.com/congo-cc/ccc-mvn.git</connection>
+		<developerConnection>scm:git:ssh://git@github.com/congo-cc/ccc-mvn.git</developerConnection>
+		<url>https://github.com/congo-cc/ccc-mvn/tree/main</url>
 	</scm>
+	<issueManagement>
+		<system>GitHub</system>
+		<url>https://github.com/congo-cc/ccc-mvn/issues</url>
+	</issueManagement>
 	<name>CongoCC</name>
 	<description>CongoCC Parsers, Generators and Utilities</description>
 	<properties>
-		<revision>2.1.0</revision>
+		<revision>2.2.0-SNAPSHOT</revision>
 		<project.build.outputTimestamp>1980-02-01T00:00:00Z</project.build.outputTimestamp>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<maven.compiler.source>1.8</maven.compiler.source>
-		<maven.compiler.target>1.8</maven.compiler.target>
+		<maven.compiler.release>8</maven.compiler.release>
+		<junit.version>6.1.3</junit.version>
 	</properties>
 	<profiles>
 		<profile>
@@ -145,7 +137,7 @@
 							</execution>
 						</executions>
 						<configuration>
-							<keyname>E54C7472F8E098ED</keyname>
+							<!-- Key id is optional: CI imports exactly one key. Override with -Dgpg.keyname=... -->
 							<gpgArguments>
 								<arg>--pinentry-mode</arg>
 								<arg>loopback</arg>
@@ -155,10 +147,12 @@
 					<plugin>
 						<groupId>org.sonatype.central</groupId>
 						<artifactId>central-publishing-maven-plugin</artifactId>
-						<version>0.9.0</version>
+						<version>0.12.0</version>
 						<extensions>true</extensions>
 						<configuration>
-							<publishingServerId>ossrh</publishingServerId>
+							<!-- server id in settings.xml; the release workflow creates it from secrets -->
+							<publishingServerId>central</publishingServerId>
+							<deploymentName>ccc-mvn ${project.version}</deploymentName>
 							<autoPublish>true</autoPublish>
 							<waitUntil>published</waitUntil>
 						</configuration>
@@ -168,13 +162,25 @@
 		</profile>
 	</profiles>
 
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.junit</groupId>
+				<artifactId>junit-bom</artifactId>
+				<version>${junit.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
 	<build>
 		<pluginManagement>
 			<plugins>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-plugin-plugin</artifactId>
-					<version>3.15.2</version>
+					<version>3.16.0</version>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
@@ -184,7 +190,7 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-compiler-plugin</artifactId>
-					<version>3.14.1</version>
+					<version>3.16.0</version>
 					<configuration>
 						<showDeprecation>true</showDeprecation>
 						<proc>none</proc>
@@ -193,7 +199,7 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-enforcer-plugin</artifactId>
-					<version>3.6.2</version>
+					<version>3.6.3</version>
 					<executions>
 						<execution>
 							<id>enforce-versions</id>
@@ -221,7 +227,7 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-jar-plugin</artifactId>
-					<version>3.5.0</version>
+					<version>3.5.1</version>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
@@ -231,37 +237,37 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-failsafe-plugin</artifactId>
-					<version>3.5.4</version>
+					<version>3.6.0</version>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-resources-plugin</artifactId>
-					<version>3.3.1</version>
+					<version>3.5.0</version>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-source-plugin</artifactId>
-					<version>3.3.1</version>
+					<version>3.4.0</version>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-surefire-plugin</artifactId>
-					<version>3.5.4</version>
+					<version>3.6.0</version>
 				</plugin>
 				<plugin>
 					<groupId>org.codehaus.mojo</groupId>
 					<artifactId>build-helper-maven-plugin</artifactId>
-					<version>3.6.1</version>
+					<version>3.6.2</version>
 				</plugin>
 				<plugin>
 					<groupId>org.codehaus.mojo</groupId>
 					<artifactId>flatten-maven-plugin</artifactId>
-					<version>1.7.3</version>
+					<version>1.8.0</version>
 				</plugin>
 				<plugin>
 					<groupId>biz.aQute.bnd</groupId>
 					<artifactId>bnd-maven-plugin</artifactId>
-					<version>7.1.0</version>
+					<version>7.4.0</version>
 				</plugin>
 			</plugins>
 		</pluginManagement>

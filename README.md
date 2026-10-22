@@ -6,7 +6,7 @@ This Maven plugin allows to run [CongoCC](https://parsers.org/) to generate sour
 <plugin>
   <groupId>org.congocc</groupId>
   <artifactId>org.congocc.maven.plugin</artifactId>
-  <version>2.0.0</version>
+  <version>2.1.0</version>
   <executions>
     <execution>
       <goals>
@@ -25,6 +25,26 @@ This Maven plugin allows to run [CongoCC](https://parsers.org/) to generate sour
 ```
 Full `pom.xml` examples can be found [here](https://github.com/congo-cc/ccc-mvn/tree/main/org.congocc.testing.maven.plugin.simple) and [here](https://github.com/eclipse-daanse/org.eclipse.daanse.mdx/blob/main/parser.ccc/pom.xml).
 
-# Note
-`build-helper-maven-plugin` might be needed after this goal to add the directory where the generated source code is located as a new source code directory, for example like [this](https://github.com/eclipse-daanse/org.eclipse.daanse.mdx/blob/01ae414ae7ebff7dd7acbd86d8842b79a10d1079/parser.ccc/pom.xml#L49-L67).
+# Notes
+* The `outputDirectory` is registered as a compile source root automatically, so `build-helper-maven-plugin` is not needed.
+* Files named `{grammar}.{part}.ccc` (for example `Grammar.lexer.ccc`) are treated as fragments for `INCLUDE` and are not generated on their own.
+* Generation is skipped when no grammar file is newer than the generated sources. Run `mvn clean` to force regeneration.
+* A non-zero exit code from CongoCC fails the build.
+
+# Snapshots
+Every push to `main` publishes the current development version (see the `revision` property in `pom.xml`) to the Central Portal snapshot repository. To use it, add the repository to your `pom.xml` or `settings.xml`:
+```xml
+<pluginRepositories>
+  <pluginRepository>
+    <id>central-portal-snapshots</id>
+    <url>https://central.sonatype.com/repository/maven-snapshots/</url>
+    <releases><enabled>false</enabled></releases>
+    <snapshots><enabled>true</enabled></snapshots>
+  </pluginRepository>
+</pluginRepositories>
+```
+Snapshots are overwritten on every push and deleted after 90 days. Use a released version for anything that must stay reproducible.
+
+# Releasing
+See [RELEASING.md](RELEASING.md). Releases are created from the GitHub *Releases* page and published to Maven Central by CI.
       
