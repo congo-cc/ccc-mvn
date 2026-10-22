@@ -28,8 +28,11 @@ the problem, delete the release and the tag, and start again. If it fails during
 after the upload, check the *Deployments* page on central.sonatype.com before
 retrying: Maven Central never overwrites a published version.
 
-To bump the default version used by local builds and snapshots, change the
-`revision` property in `pom.xml` after a release.
+The `revision` property in `pom.xml` is the *next* development version with a
+`-SNAPSHOT` suffix (e.g. `2.2.0-SNAPSHOT` while 2.2.0 is unreleased). It only
+affects local builds; the release workflow overrides it with the tag version. After
+a release, bump it to the next `-SNAPSHOT` so local builds never collide with a
+published version.
 
 ## One-time setup (project credentials)
 
