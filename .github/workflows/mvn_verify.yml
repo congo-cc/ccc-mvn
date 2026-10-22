@@ -1,4 +1,4 @@
-name: Java maven Build, Test, Verify
+name: Build and Test
 
 on:
   push:
@@ -6,29 +6,76 @@ on:
   pull_request:
     branches: [ "main" ]
 
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   build:
-
+    name: Build and test (JDK ${{ matrix.java }})
     runs-on: ubuntu-latest
-
+    strategy:
+      fail-fast: false
+      matrix:
+        java: [ '17', '21' ]
     steps:
-    - uses: actions/checkout@9bb56186c3b09b4f86b1c65136769dd318469633 # v4.1.2
-    - name: Set up JDK 17
-      uses: actions/setup-java@v4.5.0
-      with:
-        java-version: '17'
-        distribution: 'temurin'
-        cache: maven
-    - name: Set up Maven
-      uses: s4u/setup-maven-action@v1.16.0
-      with:
-        maven-version: 3.9.9
-    - name: Build with Maven
-      run: mvn -B verify --file pom.xml
-    - name: Upload Test Reports
-      if:  always()
-      uses: actions/upload-artifact@65c4c4a1ddee5b72f698fdd19549f0f0fb45cf08 # v4.6.0
-      with:
-        name: Test-reports
-        path: |
-          **/surefire-reports/TEST-*.xml
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Set up JDK ${{ matrix.java }}
+        uses: actions/setup-java@b843ebf9b913146b38da2eaa7aeddf76074ae1ad # v6.1.0
+        with:
+          java-version: ${{ matrix.java }}
+          distribution: 'temurin'
+          cache: maven
+      - name: Set up Maven
+        uses: s4u/setup-maven-action@5d4481650d2563723ad6c5e8f009ac8fd746e3e8 # v1.22.0
+        with:
+          maven-version: 3.9.16
+      - name: Build with Maven
+        run: mvn -B -ntp verify
+      - name: Upload test reports
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: test-reports-jdk${{ matrix.java }}
+          path: |
+            **/surefire-reports/TEST-*.xml
+            **/failsafe-reports/TEST-*.xml
+          if-no-files-found: ignore
+
+  release-check:
+    # Builds exactly what the release workflow builds (sources, javadoc,
+    # flattened poms) without signing or uploading, so release problems
+    # surface on pull requests instead of on release day.
+    name: Release build (no publish)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Set up JDK 17
+        uses: actions/setup-java@b843ebf9b913146b38da2eaa7aeddf76074ae1ad # v6.1.0
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: maven
+      - name: Set up Maven
+        uses: s4u/setup-maven-action@5d4481650d2563723ad6c5e8f009ac8fd746e3e8 # v1.22.0
+        with:
+          maven-version: 3.9.16
+      - name: Build release artifacts
+        run: mvn -B -ntp -Prelease verify -Dgpg.skip=true
+      - name: Upload release artifacts
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: release-artifacts
+          include-hidden-files: true # the flattened poms are dot-files
+          path: |
+            org.congocc.parser.generator/target/*.jar
+            org.congocc.maven.plugin/target/*.jar
+            org.congocc.parser.generator/.flattened-pom.xml
+            org.congocc.maven.plugin/.flattened-pom.xml

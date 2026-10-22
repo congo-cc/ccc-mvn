@@ -6,18 +6,7 @@
 	<artifactId>org.congocc.parent</artifactId>
 	<version>${revision}</version>
 	<packaging>pom</packaging>
-	<url>http://github.com/simpligility/ossrh-demo</url>
-	<distributionManagement>
-		<snapshotRepository>
-			<id>ossrh</id>
-			<url>https://s01.oss.sonatype.org/content/repositories/snapshots/</url>
-		</snapshotRepository>
-		<repository>
-			<id>ossrh</id>
-			<url>
-				https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-		</repository>
-	</distributionManagement>
+	<url>https://github.com/congo-cc/ccc-mvn</url>
 	<licenses>
 		<license>
 			<name>The MIT License, Version 2.0</name>
@@ -43,11 +32,14 @@
 		</developer>
 	</developers>
 	<scm>
-		<connection>scm:git:git://github.com/congo-cc/congo-parser-generator.git</connection>
-		<developerConnection>
-			scm:git:ssh://github.com:congo-cc/congo-parser-generator.git</developerConnection>
-		<url>http://github.com/congo-cc/congo-parser-generator/tree/main</url>
+		<connection>scm:git:https://github.com/congo-cc/ccc-mvn.git</connection>
+		<developerConnection>scm:git:ssh://git@github.com/congo-cc/ccc-mvn.git</developerConnection>
+		<url>https://github.com/congo-cc/ccc-mvn/tree/main</url>
 	</scm>
+	<issueManagement>
+		<system>GitHub</system>
+		<url>https://github.com/congo-cc/ccc-mvn/issues</url>
+	</issueManagement>
 	<name>CongoCC</name>
 	<description>CongoCC Parsers, Generators and Utilities</description>
 	<properties>
@@ -55,8 +47,8 @@
 		<project.build.outputTimestamp>1980-02-01T00:00:00Z</project.build.outputTimestamp>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<maven.compiler.source>1.8</maven.compiler.source>
-		<maven.compiler.target>1.8</maven.compiler.target>
+		<maven.compiler.release>8</maven.compiler.release>
+		<junit.version>6.0.1</junit.version>
 	</properties>
 	<profiles>
 		<profile>
@@ -145,7 +137,7 @@
 							</execution>
 						</executions>
 						<configuration>
-							<keyname>E54C7472F8E098ED</keyname>
+							<!-- Key id is optional: CI imports exactly one key. Override with -Dgpg.keyname=... -->
 							<gpgArguments>
 								<arg>--pinentry-mode</arg>
 								<arg>loopback</arg>
@@ -155,10 +147,12 @@
 					<plugin>
 						<groupId>org.sonatype.central</groupId>
 						<artifactId>central-publishing-maven-plugin</artifactId>
-						<version>0.9.0</version>
+						<version>0.12.0</version>
 						<extensions>true</extensions>
 						<configuration>
-							<publishingServerId>ossrh</publishingServerId>
+							<!-- server id in settings.xml; the release workflow creates it from secrets -->
+							<publishingServerId>central</publishingServerId>
+							<deploymentName>ccc-mvn ${project.version}</deploymentName>
 							<autoPublish>true</autoPublish>
 							<waitUntil>published</waitUntil>
 						</configuration>
@@ -167,6 +161,18 @@
 			</build>
 		</profile>
 	</profiles>
+
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.junit</groupId>
+				<artifactId>junit-bom</artifactId>
+				<version>${junit.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
 
 	<build>
 		<pluginManagement>
