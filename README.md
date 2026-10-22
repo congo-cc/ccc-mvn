@@ -31,6 +31,20 @@ Full `pom.xml` examples can be found [here](https://github.com/congo-cc/ccc-mvn/
 * Generation is skipped when no grammar file is newer than the generated sources. Run `mvn clean` to force regeneration.
 * A non-zero exit code from CongoCC fails the build.
 
+# Snapshots
+Every push to `main` publishes the current development version (see the `revision` property in `pom.xml`) to the Central Portal snapshot repository. To use it, add the repository to your `pom.xml` or `settings.xml`:
+```xml
+<pluginRepositories>
+  <pluginRepository>
+    <id>central-portal-snapshots</id>
+    <url>https://central.sonatype.com/repository/maven-snapshots/</url>
+    <releases><enabled>false</enabled></releases>
+    <snapshots><enabled>true</enabled></snapshots>
+  </pluginRepository>
+</pluginRepositories>
+```
+Snapshots are overwritten on every push and deleted after 90 days. Use a released version for anything that must stay reproducible.
+
 # Releasing
 See [RELEASING.md](RELEASING.md). Releases are created from the GitHub *Releases* page and published to Maven Central by CI.
       
